@@ -13,6 +13,7 @@ Die Pipeline folgt einem Microservice-Ansatz und ist vollständig in **Docker** 
 1.  **Ingestion Service:**
     *   Liest komprimierte Rohdaten (`.pgn.zst`).
     *   Implementiert Chunking/Partitioning: Verarbeitet Daten in konfigurierbaren Batches, um den RAM-Verbrauch konstant niedrig zu halten.
+	*   Der Prozess nutzt Python `multiprocessing` (ProcessPoolExecutor), um mehrere Quelldateien parallel auf allen verfügbaren CPU-Kernen zu verarbeiten, was den Durchsatz signifikant erhöht.
     *   Extrahiert Metadaten (Elo, Eröffnung, Ergebnis) mittels `python-chess`.
     *   Speichert Rohdaten als partitionierte **Parquet**-Dateien (Bronze Layer).
 2.  **Processing Service:**
@@ -88,6 +89,7 @@ Sobald die Pipeline durchgelaufen ist, ist das Dashboard unter folgender URL err
 
 *   **Idempotenz**: Die Pipeline ist so konzipiert, dass sie beliebig oft neu gestartet werden kann. Zieldateien werden überschrieben, sodass keine Duplikate entstehen.
 *   **Skalierbarkeit (Partitioning)**: Der Ingestion-Service verarbeitet Dateien nicht "am Stück", sondern in Chunks (z.B. 10.000 Partien). Dies verhindert Memory-Overflows (OOM) und ermöglicht die Verarbeitung beliebig großer Datensätze bei konstantem RAM-Verbrauch.
+*   **Parallelisierung:** Der Ingestion-Prozess nutzt Python `multiprocessing` (ProcessPoolExecutor), um mehrere Quelldateien parallel auf allen verfügbaren CPU-Kernen zu verarbeiten, was den Durchsatz signifikant erhöht.
 *   **Reliability**: Durch `service_completed_successfully` Conditions in Docker Compose wird sichergestellt, dass Services in der korrekten Reihenfolge starten (Vermeidung von Race Conditions).
 *   **Observability (Logging):** Implementierung eines **Dual-Logging-Ansatzes**. Systemzustände und Fehler werden sowohl in die Docker-Konsole (stdout) als auch persistent in rotierende Log-Dateien (`/logs`) geschrieben, um Debugging und Monitoring auch nach Container-Neustarts zu ermöglichen.
 *   **Reproduzierbarkeit**: Alle Abhängigkeiten sind in `requirements.txt` fixiert und laufen in isolierten Containern.

@@ -13,6 +13,7 @@ services:
       # Test-Limit (0 für "Alles verarbeiten")
       - MAX_GAMES=0
       - CHUNK_SIZE=10000      # Partitioning: Speichere alle 10k Partien eine Datei
+      - MAX_WORKERS=4         # Anzahl der parallelen Prozesse (je nach CPU-Kernen)
       - TARGET_DIR=/data/raw
 
   processing:
