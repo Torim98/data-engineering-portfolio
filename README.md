@@ -4,7 +4,7 @@ Dieses Repository beinhaltet die Implementierung einer **Batch-basierten Datenar
 
 Als Datenbasis dient die [Lichess Open Database](https://database.lichess.org/).
 
-## 🏗️ Architektur
+## Architektur
 
 Die Pipeline folgt einem Microservice-Ansatz und ist vollständig in **Docker** containerisiert. Sie implementiert eine "Medallion Architecture" (Bronze/Gold Layer) innerhalb eines lokalen Data Lakes.
 
@@ -29,7 +29,7 @@ Die Pipeline folgt einem Microservice-Ansatz und ist vollständig in **Docker** 
 
 ---
 
-## 🚀 Technologie-Stack
+## Technologie-Stack
 
 *   **Infrastructure as Code:** Docker & Docker Compose
 *   **Sprache:** Python 3.11 (Slim Images)
@@ -39,7 +39,7 @@ Die Pipeline folgt einem Microservice-Ansatz und ist vollständig in **Docker** 
 
 ---
 
-## 🛠️ Installation & Ausführung
+## Installation & Ausführung
 
 Voraussetzung: **Docker Desktop** muss installiert sein und laufen.
 
@@ -89,7 +89,7 @@ Sobald die Pipeline durchgelaufen ist, ist das Dashboard unter folgender URL err
 
 ---
 
-## 🔧 Konfiguration über Environment-Files
+## Konfiguration über Environment-Files
 
 Die Konfiguration aller Services erfolgt über dedizierte `.env`-Dateien und nicht direkt in der `docker-compose.yml`.
 
@@ -114,7 +114,7 @@ docker compose up -d --build
 
 ---
 
-## 💡 Engineering-Konzepte
+## Engineering-Konzepte
 
 *   **Idempotenz**: Die Pipeline ist so konzipiert, dass sie beliebig oft neu gestartet werden kann. Zieldateien werden überschrieben, sodass keine Duplikate entstehen.
 *   **Skalierbarkeit (Partitioning)**: Der Ingestion-Service verarbeitet Dateien nicht "am Stück", sondern in Chunks (z.B. 10.000 Partien). Dies verhindert Memory-Overflows (OOM) und ermöglicht die Verarbeitung beliebig großer Datensätze bei konstantem RAM-Verbrauch.
@@ -126,7 +126,7 @@ docker compose up -d --build
 
 ---
 
-## 📂 Projektstruktur
+## Projektstruktur
 
 *   `/ingestion`: Code für den ETL-Prozess (PGN -> Parquet).
 *   `/processing`: Code für Aggregation und Feature Engineering.
@@ -137,7 +137,7 @@ docker compose up -d --build
 
 ---
 
-## 🔮 Ausblick: Machine Learning Integration
+## Ausblick: Machine Learning Integration
 
 Die Entwicklung der eigentlichen **Machine Learning Applikation** (z. B. zur Vorhersage von Spielausgängen) war **Out of Scope** für dieses Data-Engineering-Projekt. Die Architektur ist jedoch explizit darauf ausgelegt, als Backend für ML-Workflows zu dienen.
 
@@ -169,9 +169,10 @@ Da der *Processing Service* bereits das Data Cleaning (Filterung, Typisierung) �
 
 ---
 
-## 📄 Lizenz
+## Lizenz
 
 
 Dieses Projekt ist unter der **MIT Lizenz** lizenziert – siehe die Datei [LICENSE](LICENSE) für Details.
+
 
 
