@@ -114,6 +114,17 @@ docker compose up -d --build
 
 ---
 
+## Projektstruktur
+
+*   `/ingestion`: Code für den ETL-Prozess (PGN -> Parquet).
+*   `/processing`: Code für Aggregation und Feature Engineering.
+*   `/dashboard`: Streamlit-Applikation.
+*   `/env`: Konfiguration der Container.
+*   `/data`: Lokaler Mount für den Data Lake (wird via .gitignore exkludiert).
+*   `/logs`: Speicherort für persistente Log-Dateien der Services (`ingestion.log`, `processing.log` und `dashboard.log`) (wird via .gitignore exkludiert).
+
+---
+
 ## Engineering-Konzepte
 
 *   **Idempotenz**: Die Pipeline ist so konzipiert, dass sie beliebig oft neu gestartet werden kann. Zieldateien werden überschrieben, sodass keine Duplikate entstehen.
@@ -123,17 +134,6 @@ docker compose up -d --build
 *   **Observability (Logging):** Implementierung eines **Dual-Logging-Ansatzes**. Systemzustände und Fehler werden sowohl in die Docker-Konsole (stdout) als auch persistent in rotierende Log-Dateien (`/logs`) geschrieben, um Debugging und Monitoring auch nach Container-Neustarts zu ermöglichen.
 *   **Reproduzierbarkeit**: Alle Abhängigkeiten sind in `requirements.txt` fixiert und laufen gemeinsam in isolierten Containern. Die Konfigurationsparameter sind in dedizierte `.env`-Dateien ausgelagert.
 *   **Datenschutz**: Spielernamen werden während der Ingestion verworfen (Datensparsamkeit).
-
----
-
-## Projektstruktur
-
-*   `/ingestion`: Code für den ETL-Prozess (PGN -> Parquet).
-*   `/processing`: Code für Aggregation und Feature Engineering.
-*   `/dashboard`: Streamlit-Applikation.
-*   `/env`: Konfiguration der Container.
-*   `/data`: Lokaler Mount für den Data Lake (wird via .gitignore exkludiert).
-*   `/logs`: Speicherort für persistente Log-Dateien der Services (`ingestion.log`, `processing.log` und `dashboard.log`) (wird via .gitignore exkludiert).
 
 ---
 
@@ -173,6 +173,7 @@ Da der *Processing Service* bereits das Data Cleaning (Filterung, Typisierung) �
 
 
 Dieses Projekt ist unter der **MIT Lizenz** lizenziert – siehe die Datei [LICENSE](LICENSE) für Details.
+
 
 
 
