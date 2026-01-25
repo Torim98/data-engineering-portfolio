@@ -132,3 +132,9 @@ Da der *Processing Service* bereits das Data Cleaning (Filterung, Typisierung) �
     model.fit(X, y)
     ```
 3.  **Deployment:** Das trainierte Modell könnte als vierter Container (z. B. mit **FastAPI** oder **MLflow**) in die `docker-compose`-Architektur integriert werden, um Vorhersagen für neue Partien in Echtzeit bereitzustellen.
+
+---
+
+## 📄 Lizenz
+
+Dieses Projekt ist unter der **MIT Lizenz** lizenziert – siehe die Datei [LICENSE](LICENSE) für Details.
