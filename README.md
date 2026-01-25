@@ -101,3 +101,34 @@ Sobald die Pipeline durchgelaufen ist, ist das Dashboard unter folgender URL err
 *   `/dashboard`: Streamlit-Applikation.
 *   `/data`: Lokaler Mount für den Data Lake (wird via .gitignore exkludiert).
 
+---
+
+## 🔮 Ausblick: Machine Learning Integration
+
+Die Entwicklung der eigentlichen **Machine Learning Applikation** (z. B. zur Vorhersage von Spielausgängen) war **Out of Scope** für dieses Data-Engineering-Projekt. Die Architektur ist jedoch explizit darauf ausgelegt, als Backend für ML-Workflows zu dienen.
+
+**Wie eine Integration aussehen könnte:**
+
+Da der *Processing Service* bereits das Data Cleaning (Filterung, Typisierung) übernimmt, kann ein Data Scientist direkt auf den **aufbereiteten Daten** aufsetzen, anstatt sich erneut mit den Rohdaten befassen zu müssen.
+
+**Beispiel-Workflow für ein Vorhersagemodell:**
+
+1.  **Data Loading:** Das ML-Modell lädt die bereinigten Partitionen (z. B. aus einem "Silver Layer", bevor die Daten für das Dashboard aggregiert werden).
+2.  **Training:**
+    ```python
+    # Pseudo-Code Beispiel mit Scikit-Learn
+    import pandas as pd
+    from sklearn.ensemble import RandomForestClassifier
+
+    # Zugriff auf die vom Data Engineering vorbereiteten Daten
+    # (Parquet ist performant und behält Datentypen bei)
+    df = pd.read_parquet('data/processed/cleaned_games')
+    
+    # Training des Modells auf den sauberen Features
+    X = df[['WhiteElo', 'BlackElo', 'ECO_Encoded']]
+    y = df['Result']
+    
+    model = RandomForestClassifier()
+    model.fit(X, y)
+    ```
+3.  **Deployment:** Das trainierte Modell könnte als vierter Container (z. B. mit **FastAPI** oder **MLflow**) in die `docker-compose`-Architektur integriert werden, um Vorhersagen für neue Partien in Echtzeit bereitzustellen.
