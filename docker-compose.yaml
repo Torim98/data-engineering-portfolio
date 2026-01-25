@@ -11,7 +11,8 @@ services:
       - FILE_PATTERN=.pgn.zst
       # Test-Limit (0 für "Alles verarbeiten")
       - MAX_GAMES=0
-      - TARGET_FILE=/data/raw/games.parquet
+      - CHUNK_SIZE=10000      # Partitioning: Speichere alle 10k Partien eine Datei
+      - TARGET_DIR=/data/raw
 
   processing:
     build: ./processing
