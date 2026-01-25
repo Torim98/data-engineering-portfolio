@@ -18,7 +18,7 @@ services:
       - ./logs:/logs
     depends_on:
       ingestion:
-        # WICHTIG: Wartet, bis Ingestion erfolgreich beendet ist!
+        # Wartet, bis Ingestion erfolgreich beendet ist
         condition: service_completed_successfully
     environment:
       - ./env/processing.env
