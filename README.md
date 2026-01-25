@@ -58,12 +58,14 @@ Die Ordnerstruktur sollte so aussehen:
 
 ```Text
 /portfolio-chess-analytics
+  ├── dashboard/
   ├── data/
   │   └── lichess_sample1.pgn.zst
   │   └── lichess_sample2.pgn.zst
+  ├── env/
   ├── ingestion/
+  ├── logs/
   ├── processing/
-  ├── dashboard/
   └── docker-compose.yml
 ```
 
@@ -169,3 +171,4 @@ Da der *Processing Service* bereits das Data Cleaning (Filterung, Typisierung) �
 
 
 Dieses Projekt ist unter der **MIT Lizenz** lizenziert – siehe die Datei [LICENSE](LICENSE) für Details.
+
