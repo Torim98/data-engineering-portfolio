@@ -15,10 +15,18 @@ logging.basicConfig(
 
 DATA_FILE = "/data/processed/stats.parquet"
 
-st.set_page_config(page_title="Chess Analytics", layout="wide")
-
-st.title("♟️ Schach Analyse Dashboard")
-st.markdown("Analyse basierend auf der Lichess Open Database (Batch Processing)")
+# Titel und Untertitel des Dashboards
+DASHBOARD_TITLE = os.getenv(
+    "DASHBOARD_TITLE",
+    "♟️ Chess Analytics"
+)
+DASHBOARD_SUBTITLE = os.getenv(
+    "DASHBOARD_SUBTITLE",
+    "Analyse basierend auf der Lichess Open Database (Batch Processing)"
+)
+st.set_page_config(page_title=DASHBOARD_TITLE, layout="wide")
+st.title(DASHBOARD_TITLE)
+st.markdown(DASHBOARD_SUBTITLE)
 
 # Funktion zum Laden der Daten mit Cache
 def load_data():
