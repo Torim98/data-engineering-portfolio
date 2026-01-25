@@ -133,7 +133,7 @@ docker compose up -d --build
 *   `/dashboard`: Streamlit-Applikation.
 *   `/env`: Konfiguration der Container.
 *   `/data`: Lokaler Mount für den Data Lake (wird via .gitignore exkludiert).
-*   `/logs`: Speicherort für persistente Log-Dateien der Services (`ingestion.log`, `processing.log` und `dashbboard.log`) (wird via .gitignore exkludiert).
+*   `/logs`: Speicherort für persistente Log-Dateien der Services (`ingestion.log`, `processing.log` und `dashboard.log`) (wird via .gitignore exkludiert).
 
 ---
 
@@ -173,4 +173,5 @@ Da der *Processing Service* bereits das Data Cleaning (Filterung, Typisierung) �
 
 
 Dieses Projekt ist unter der **MIT Lizenz** lizenziert – siehe die Datei [LICENSE](LICENSE) für Details.
+
 
