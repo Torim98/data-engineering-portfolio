@@ -5,6 +5,17 @@ import io
 import os
 import glob
 import shutil
+import logging
+
+# LOGGING SETUP (Dual: Datei + Konsole)
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler("/logs/ingestion.log"), # Schreibt in Datei
+        logging.StreamHandler()                     # Schreibt in Konsole (Docker logs)
+    ]
+)
 
 # Konfiguration aus Environment Variables (oder Standardwerte)
 SOURCE_DIR = os.getenv("SOURCE_DIR", "/data")
@@ -29,7 +40,7 @@ def save_chunk(data, chunk_id):
     filepath = os.path.join(TARGET_DIR, filename)
     
     # Als Parquet speichern
-    print(f"   -> Speichere Chunk {chunk_id} ({len(data)} Zeilen) nach {filename}...")
+    logging.info(f"   -> Speichere Chunk {chunk_id} ({len(data)} Partien) nach {filename}...")
     df = pd.DataFrame(data)
     
     # Data Cleaning - Datentypen anpassen (Elo zu Int)
@@ -38,14 +49,16 @@ def save_chunk(data, chunk_id):
     
     df.to_parquet(filepath, engine='pyarrow', index=False)
 def process_pgn():
+    logging.info(f"Starte Ingestion von {SOURCE_DIR}...")
+    
     files = get_files()
     if not files:
-        print(f"WARNUNG: Keine Dateien mit Endung '{FILE_PATTERN}' in {SOURCE_DIR} gefunden.")
+        logging.error(f"WARNUNG: Keine Dateien mit Endung '{FILE_PATTERN}' in {SOURCE_DIR} gefunden.")
         return
 
     # Idempotenz: Zielordner bereinigen (alte Chunks löschen), damit wir sauber starten
     if os.path.exists(TARGET_DIR):
-        print(f"Bereinige Zielordner {TARGET_DIR}...")
+        logging.info(f"Bereinige Zielordner {TARGET_DIR}...")
         shutil.rmtree(TARGET_DIR)
     os.makedirs(TARGET_DIR, exist_ok=True)
     
@@ -59,7 +72,7 @@ def process_pgn():
         if MAX_GAMES > 0 and total_games_processed >= MAX_GAMES:
             break
 
-        print(f"--> Verarbeite Datei: {os.path.basename(file_path)}")
+        logging.info(f"--> Verarbeite Datei: {os.path.basename(file_path)}")
         
         try:
 			# Stream öffnen (zstd dekomprimieren)
@@ -76,7 +89,7 @@ def process_pgn():
                         try:
                             game = chess.pgn.read_game(text_stream)
                         except Exception as e:
-                            print(f"Fehler beim Parsen einer Partie: {e}")
+                            logging.error(f"Fehler beim Parsen einer Partie: {e}")
                             continue
 
                         if game is None:
@@ -102,16 +115,16 @@ def process_pgn():
                             save_chunk(current_chunk_data, chunk_counter)
                             current_chunk_data = [] # Speicher leeren!
                             chunk_counter += 1
-                            print(f"Gesamtfortschritt: {total_games_processed} Partien...")
+                            logging.info(f"Gesamtfortschritt: {total_games_processed} Partien...")
 
         except Exception as e:
-            print(f"Fehler beim Lesen der Datei {file_path}: {e}")
+            logging.error(f"Fehler beim Lesen der Datei {file_path}: {e}")
 
     # Den "Rest" speichern (Puffer)
     if current_chunk_data:
         save_chunk(current_chunk_data, chunk_counter)
 
-    print(f"Ingestion beendet. {total_games_processed} Partien in {chunk_counter + 1} Files gespeichert.")
+    logging.info(f"Ingestion beendet. {total_games_processed} Partien in {chunk_counter + 1} Files gespeichert.")
 
 if __name__ == "__main__":
     process_pgn()

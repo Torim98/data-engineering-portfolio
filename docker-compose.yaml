@@ -6,6 +6,7 @@ services:
     container_name: chess-ingestion
     volumes:
       - ./data:/data
+      - ./logs:/logs
     environment:
       - SOURCE_DIR=/data
       - FILE_PATTERN=.pgn.zst
@@ -19,6 +20,7 @@ services:
     container_name: chess-processing
     volumes:
       - ./data:/data
+      - ./logs:/logs
     depends_on:
       ingestion:
         # WICHTIG: Wartet, bis Ingestion erfolgreich beendet ist!
@@ -32,6 +34,7 @@ services:
     container_name: chess-dashboard
     volumes:
       - ./data:/data
+      - ./logs:/logs
     ports:
       - "8501:8501"
     depends_on:

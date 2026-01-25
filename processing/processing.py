@@ -1,25 +1,36 @@
 import pandas as pd
 import os
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler("/logs/processing.log"),
+        logging.StreamHandler()
+    ]
+)
 
 SOURCE_DIR = os.getenv("SOURCE_DIR", "/data/raw") 
 TARGET_FILE = os.getenv("TARGET_FILE", "/data/processed/stats.parquet")
 
 def aggregate_data():
-    print("Lade Rohdaten...")
+    logging.info(f"Lade Rohdaten aus Verzeichnis: {SOURCE_DIR} ...")
+    
     if not os.path.exists(SOURCE_DIR):
-        print("Keine Rohdaten gefunden. Ingestion zuerst laufen lassen!")
+        logging.info("Keine Rohdaten gefunden. Ingestion zuerst laufen lassen!")
         return
 
     try:
         # Pandas/PyArrow kann einen Ordner lesen und hängt automatisch alle parquets zusammen
         df = pd.read_parquet(SOURCE_DIR, engine='pyarrow')
     except Exception as e:
-        print(f"Fehler beim Lesen der Parquet-Dateien: {e}")
+        logging.error(f"Fehler beim Lesen der Parquet-Dateien: {e}")
         return
 
     # Einfache Transformation: Filtern und Aggregieren
-    print(f"Daten geladen: {len(df)} Zeilen.")
-    print("Verarbeite Daten...")
+    logging.info(f"Daten geladen: {len(df)} Zeilen.")
+    logging.info("Verarbeite Daten...")
     
     # Filter: Nur gewertete Spiele (kein Elo 0)
     df_clean = df[(df['WhiteElo'] > 0) & (df['BlackElo'] > 0)]
@@ -38,11 +49,11 @@ def aggregate_data():
     # Nur Eröffnungen mit mindestens 10 Partien behalten
     stats = stats[stats['TotalGames'] >= 10].sort_values(by='TotalGames', ascending=False)
 
-    print(f"Speichere aggregierte Daten nach {TARGET_FILE}...")
+    logging.info(f"Speichere aggregierte Daten nach {TARGET_FILE}...")
     # Ordner erstellen
     os.makedirs(os.path.dirname(TARGET_FILE), exist_ok=True)
     stats.to_parquet(TARGET_FILE)
-    print("Processing abgeschlossen.")
+    logging.info("Processing abgeschlossen.")
 
 if __name__ == "__main__":
     aggregate_data()

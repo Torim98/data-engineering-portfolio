@@ -2,6 +2,16 @@ import streamlit as st
 import pandas as pd
 import os
 import time
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler("/logs/dashboard.log"),
+        logging.StreamHandler()
+    ]
+)
 
 DATA_FILE = "/data/processed/stats.parquet"
 
@@ -13,7 +23,9 @@ st.markdown("Analyse basierend auf der Lichess Open Database (Batch Processing)"
 # Funktion zum Laden der Daten mit Cache
 def load_data():
     if os.path.exists(DATA_FILE):
+        logging.info("Daten erfolgreich für Dashboard geladen.")
         return pd.read_parquet(DATA_FILE)
+    logging.warning("Dashboard konnte keine Daten finden.")
     return None
 
 # Warte-Schleife, falls Processing noch läuft

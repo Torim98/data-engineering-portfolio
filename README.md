@@ -89,6 +89,7 @@ Sobald die Pipeline durchgelaufen ist, ist das Dashboard unter folgender URL err
 *   **Idempotenz**: Die Pipeline ist so konzipiert, dass sie beliebig oft neu gestartet werden kann. Zieldateien werden überschrieben, sodass keine Duplikate entstehen.
 *   **Skalierbarkeit (Partitioning)**: Der Ingestion-Service verarbeitet Dateien nicht "am Stück", sondern in Chunks (z.B. 10.000 Partien). Dies verhindert Memory-Overflows (OOM) und ermöglicht die Verarbeitung beliebig großer Datensätze bei konstantem RAM-Verbrauch.
 *   **Reliability**: Durch `service_completed_successfully` Conditions in Docker Compose wird sichergestellt, dass Services in der korrekten Reihenfolge starten (Vermeidung von Race Conditions).
+*   **Observability (Logging):** Implementierung eines **Dual-Logging-Ansatzes**. Systemzustände und Fehler werden sowohl in die Docker-Konsole (stdout) als auch persistent in rotierende Log-Dateien (`/logs`) geschrieben, um Debugging und Monitoring auch nach Container-Neustarts zu ermöglichen.
 *   **Reproduzierbarkeit**: Alle Abhängigkeiten sind in `requirements.txt` fixiert und laufen in isolierten Containern.
 *   **Datenschutz**: Spielernamen werden während der Ingestion verworfen (Datensparsamkeit).
 
@@ -100,6 +101,7 @@ Sobald die Pipeline durchgelaufen ist, ist das Dashboard unter folgender URL err
 *   `/processing`: Code für Aggregation und Feature Engineering.
 *   `/dashboard`: Streamlit-Applikation.
 *   `/data`: Lokaler Mount für den Data Lake (wird via .gitignore exkludiert).
+*   `/logs`: Speicherort für persistente Log-Dateien der Services (`ingestion.log`, `processing.log` und `dashbboard.log`) (wird via .gitignore exkludiert).
 
 ---
 
