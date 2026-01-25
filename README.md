@@ -85,6 +85,31 @@ Sobald die Pipeline durchgelaufen ist, ist das Dashboard unter folgender URL err
 
 ---
 
+## 🔧 Konfiguration über Environment-Files
+
+Die Konfiguration aller Services erfolgt über dedizierte `.env`-Dateien und nicht direkt in der `docker-compose.yml`.
+
+```Text
+/env
+  ├── ingestion.env
+  ├── processing.env
+  └── dashboard.env
+```
+
+Beispiele:
+
+*   `ingestion.env`: Chunk-Größe, Parallelisierung, Test-Limits
+*   `processing.env`: Ein- und Ausgabepfade
+*   `dashboard.env`: Titel und Beschreibung des Dashboards
+
+Änderungen an den `.env-Dateien` erfordern einen Neustart der Container:
+
+```Bash
+docker compose up -d --build
+```
+
+---
+
 ## 💡 Engineering-Konzepte
 
 *   **Idempotenz**: Die Pipeline ist so konzipiert, dass sie beliebig oft neu gestartet werden kann. Zieldateien werden überschrieben, sodass keine Duplikate entstehen.
@@ -92,7 +117,7 @@ Sobald die Pipeline durchgelaufen ist, ist das Dashboard unter folgender URL err
 *   **Parallelisierung:** Der Ingestion-Prozess nutzt Python `multiprocessing` (ProcessPoolExecutor), um mehrere Quelldateien parallel auf allen verfügbaren CPU-Kernen zu verarbeiten, was den Durchsatz signifikant erhöht.
 *   **Reliability**: Durch `service_completed_successfully` Conditions in Docker Compose wird sichergestellt, dass Services in der korrekten Reihenfolge starten (Vermeidung von Race Conditions).
 *   **Observability (Logging):** Implementierung eines **Dual-Logging-Ansatzes**. Systemzustände und Fehler werden sowohl in die Docker-Konsole (stdout) als auch persistent in rotierende Log-Dateien (`/logs`) geschrieben, um Debugging und Monitoring auch nach Container-Neustarts zu ermöglichen.
-*   **Reproduzierbarkeit**: Alle Abhängigkeiten sind in `requirements.txt` fixiert und laufen in isolierten Containern.
+*   **Reproduzierbarkeit**: Alle Abhängigkeiten sind in `requirements.txt` fixiert und laufen gemeinsam in isolierten Containern. Die Konfigurationsparameter sind in dedizierte `.env`-Dateien ausgelagert.
 *   **Datenschutz**: Spielernamen werden während der Ingestion verworfen (Datensparsamkeit).
 
 ---
@@ -102,6 +127,7 @@ Sobald die Pipeline durchgelaufen ist, ist das Dashboard unter folgender URL err
 *   `/ingestion`: Code für den ETL-Prozess (PGN -> Parquet).
 *   `/processing`: Code für Aggregation und Feature Engineering.
 *   `/dashboard`: Streamlit-Applikation.
+*   `/env`: Konfiguration der Container.
 *   `/data`: Lokaler Mount für den Data Lake (wird via .gitignore exkludiert).
 *   `/logs`: Speicherort für persistente Log-Dateien der Services (`ingestion.log`, `processing.log` und `dashbboard.log`) (wird via .gitignore exkludiert).
 
@@ -140,5 +166,6 @@ Da der *Processing Service* bereits das Data Cleaning (Filterung, Typisierung) �
 ---
 
 ## 📄 Lizenz
+
 
 Dieses Projekt ist unter der **MIT Lizenz** lizenziert – siehe die Datei [LICENSE](LICENSE) für Details.
