@@ -8,6 +8,8 @@ Als Datenbasis dient die [Lichess Open Database](https://database.lichess.org/).
 
 Die Pipeline folgt einem Microservice-Ansatz und ist vollständig in **Docker** containerisiert. Sie implementiert eine "Medallion Architecture" (Bronze/Gold Layer) innerhalb eines lokalen Data Lakes.
 
+![Architektur Flowchart](assets/data-engineering_flowchart_dark.drawio.png)
+
 **Die Komponenten:**
 
 1.  **Ingestion Service:**
