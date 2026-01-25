@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  ingestion:
+    build: ./ingestion
+    container_name: chess-ingestion
+    volumes:
+      - ./data:/data
+    environment:
+      - SOURCE_FILE=/data/lichess_sample.pgn.zst
+      - TARGET_FILE=/data/raw/games.parquet
+
+  processing:
+    build: ./processing
+    container_name: chess-processing
+    volumes:
+      - ./data:/data
+    depends_on:
+      ingestion:
+        # WICHTIG: Wartet, bis Ingestion erfolgreich beendet ist!
+        condition: service_completed_successfully
+    environment:
+      - SOURCE_FILE=/data/raw/games.parquet
+      - TARGET_FILE=/data/processed/stats.parquet
+
+  dashboard:
+    build: ./dashboard
+    container_name: chess-dashboard
+    volumes:
+      - ./data:/data
+    ports:
+      - "8501:8501"
+    depends_on:
+      processing:
+        # Dashboard wartet, bis Processing fertig ist
+        condition: service_completed_successfully
