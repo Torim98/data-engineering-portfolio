@@ -49,16 +49,16 @@ cd data-engineering-portfolio
 
 Aus Gründen der Speicherplatzoptimierung sind die Rohdaten nicht im Repository enthalten.
 
-1. Lade eine Beispieldatei von database.lichess.org herunter (für Tests empfiehlt sich eine kleine Datei von 2013/2014).
-2. Platziere die Datei im Ordner `data/`.
-3. Benenne die Datei um in: `lichess_sample.pgn.zst` (oder passe die Variable in `docker-compose.yml` an).
+1. Lade eine Beispieldatei von database.lichess.org herunter (für Tests empfehlen sich kleinere Dateien von 2013/2014).
+2. Platziere die Datein im Ordner `data/`.
 
 Die Ordnerstruktur sollte so aussehen:
 
 ```Text
 /portfolio-chess-analytics
   ├── data/
-  │   └── lichess_sample.pgn.zst
+  │   └── lichess_sample1.pgn.zst
+  │   └── lichess_sample2.pgn.zst
   ├── ingestion/
   ├── processing/
   ├── dashboard/
