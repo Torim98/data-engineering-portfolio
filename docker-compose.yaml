@@ -7,7 +7,10 @@ services:
     volumes:
       - ./data:/data
     environment:
-      - SOURCE_FILE=/data/lichess_sample.pgn.zst
+      - SOURCE_DIR=/data
+      - FILE_PATTERN=.pgn.zst
+      # Test-Limit (0 für "Alles verarbeiten")
+      - MAX_GAMES=0
       - TARGET_FILE=/data/raw/games.parquet
 
   processing:
