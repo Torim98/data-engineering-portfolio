@@ -174,9 +174,10 @@ Da der *Processing Service* bereits das Data Cleaning (Filterung, Typisierung) �
 
 Dieses Projekt ist unter der **MIT Lizenz** lizenziert – siehe die Datei [LICENSE](LICENSE) für Details.
 
-Autor: Tom Maurer B.Sc.
+**Autor:** Tom Maurer B.Sc.
 
-Akademischer Kontext: Portfolio im Master-Modul Projekt: Data Engineering.
+**Akademischer Kontext:** Portfolio im Master-Modul Projekt: Data Engineering.
+
 
 
 
