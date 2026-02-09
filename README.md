@@ -178,7 +178,10 @@ Dieses Projekt ist unter der **MIT Lizenz** lizenziert – siehe die Datei [LICE
 
 **Autor:** Tom Maurer B.Sc.
 
+**Tutor:** Prof. Dr. Max Pumperla
+
 **Akademischer Kontext:** Portfolio im Master-Modul Projekt: Data Engineering.
+
 
 
 
