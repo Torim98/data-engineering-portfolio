@@ -4,6 +4,8 @@ Dieses Repository beinhaltet die Implementierung einer **Batch-basierten Datenar
 
 Als Datenbasis dient die [Lichess Open Database](https://database.lichess.org/).
 
+**Hinweis:** Eine vollständige Dokumentation aller Projektphasen (Konzeption, Umsetzung, Abstracts) ist in der Datei [project_documentation.md](assets/project_documentation.md) zu finden.
+
 ## Architektur
 
 Die Pipeline folgt einem Microservice-Ansatz und ist vollständig in **Docker** containerisiert. Sie implementiert eine "Medallion Architecture" (Bronze/Gold Layer) innerhalb eines lokalen Data Lakes.
